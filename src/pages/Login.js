@@ -15,7 +15,7 @@ function Login(props){
     const onFinish = values => {
         console.log('Success:', values);
         setToken(values.username);
-        this.props.history.push("/admin");
+        props.history.push("/admin");
     };
 
     const onFinishFailed = errorInfo => {

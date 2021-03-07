@@ -6,6 +6,10 @@ export function setToken(token){
    localStorage.setItem("token",token);
 }
 
+export function clearToken(token){
+    localStorage.removeItem("token");
+}
+
 export function isLogined(){
     if(localStorage.getItem("token")){
         return true;
