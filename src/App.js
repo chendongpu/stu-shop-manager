@@ -4,10 +4,11 @@ import {HashRouter as Router,Switch,Route,Redirect} from 'react-router-dom'
 import {adminRoutes} from './routes/index'
 import React from "react";
 import Frame from './components/Frame/Index'
+import {isLogined} from './utils/auth'
 
 
 function App() {
-  return (
+  return ( isLogined()?
     <Frame>
         <h1> app component</h1>
         <Switch>
@@ -19,7 +20,7 @@ function App() {
             <Redirect to={adminRoutes[0].path} from="/admin" />
             <Redirect to="/404" />
         </Switch>
-    </Frame>
+    </Frame>:<Redirect to="/login" />
   );
 }
 

@@ -1,6 +1,7 @@
 import  React from 'react'
 import { Form, Input, Button, Checkbox,Card } from 'antd';
 import "./Login.css"
+import {setToken} from "../utils/auth";
 
 const layout = {
     labelCol: { span: 8 },
@@ -10,9 +11,11 @@ const tailLayout = {
     wrapperCol: { offset: 8, span: 16 },
 };
 
-function Login(){
+function Login(props){
     const onFinish = values => {
         console.log('Success:', values);
+        setToken(values.username);
+        this.props.history.push("/admin");
     };
 
     const onFinishFailed = errorInfo => {
