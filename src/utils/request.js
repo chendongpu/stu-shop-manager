@@ -1,4 +1,4 @@
-import {axios} from 'axios';
+import axios from 'axios';
 import {getToken} from "./auth";
 
 const instance =axios.create({
@@ -7,7 +7,7 @@ const instance =axios.create({
 });
 
 // 添加请求拦截器
-axios.interceptors.request.use(function (config) {
+instance.interceptors.request.use(function (config) {
     // 在发送请求之前做些什么
     config.headers['authorization']='Bearer'+getToken();
     return config;
@@ -17,7 +17,7 @@ axios.interceptors.request.use(function (config) {
 });
 
 // 添加响应拦截器
-axios.interceptors.response.use(function (response) {
+instance.interceptors.response.use(function (response) {
     // 对响应数据做点什么
     return response.data;
 }, function (error) {
