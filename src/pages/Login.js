@@ -19,7 +19,7 @@ function Login(props){
         // props.history.push("/admin");
 
         loginApi({
-            userName:values.username,
+            username:values.username,
             password:values.password
         }).then(res=>{
             console.log(res);

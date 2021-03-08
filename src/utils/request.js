@@ -2,14 +2,16 @@ import axios from 'axios';
 import {getToken} from "./auth";
 
 const instance =axios.create({
-    baseURL:'http://localhost:3000',
+    baseURL:'http://192.168.0.100/api/index.php/',
     timeout:5000
 });
 
 // 添加请求拦截器
 instance.interceptors.request.use(function (config) {
     // 在发送请求之前做些什么
-    config.headers['authorization']='Bearer'+getToken();
+   // config.headers['authorization']='Bearer'+getToken();
+    config.headers['clientservice']='wechatapplet';
+    config.headers['authkey']='printhr';
     return config;
 }, function (error) {
     // 对请求错误做些什么

@@ -1,7 +1,14 @@
 import  React from 'react'
 import {Card,Table,Button,Popconfirm} from 'antd'
+import {listApi} from "../../../services/products";
 
 function List(props){
+
+    // useEffect(()=>{
+    //     listApi().then(res=>{
+    //         console.log(res);
+    //     });
+    // },[]);
 
     const dataSource=[
         {id:1,name:'apple',price:5},
