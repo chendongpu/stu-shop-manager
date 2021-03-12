@@ -2,7 +2,7 @@ import axios from 'axios';
 import {getToken} from "./auth";
 
 const instance =axios.create({
-    baseURL:'http://192.168.0.100/api/index.php/',
+    baseURL:'/api/index.php/',
     timeout:5000
 });
 
@@ -28,20 +28,20 @@ instance.interceptors.response.use(function (response) {
 });
 
 export function get(url,params){
-    return axios.get(url,{
+    return instance.get(url,{
         params
     });
 }
 
 export function post(url,data){
-    return axios.post(url,data);
+    return instance.post(url,data);
 }
 
 export function put(url,data){
-    return axios.put(url,data);
+    return instance.put(url,data);
 }
 
 export function del(url){
-    return axios.delete(url);
+    return instance.delete(url);
 }
 
