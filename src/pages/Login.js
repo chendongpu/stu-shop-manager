@@ -23,7 +23,7 @@ function Login(props){
             password:values.password
         }).then(res=>{
             console.log(res);
-            if(res.code==="success"){
+            if(res.status===200){
                 setToken(res.token);
                 props.history.push("/admin");
                 message.info('登录成功');
