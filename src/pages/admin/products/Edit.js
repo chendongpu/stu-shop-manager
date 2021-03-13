@@ -1,6 +1,6 @@
-import  React from 'react'
+import  {React,useEffect,useState} from 'react'
 import {Form,Card,Input,Button,message} from "antd"
-import {createApi} from "../../../services/products";
+import {createApi,  oneApi,modifyOne} from "../../../services/products";
 
 const layout = {
     labelCol: { span: 8 },
@@ -10,17 +10,38 @@ const tailLayout = {
     wrapperCol: { offset: 8, span: 16 },
 };
 
+
+
 function Edit(props){
+
+    const [form] = Form.useForm();
+    useEffect(()=>{
+        if(props.match.params.id){
+            oneApi(props.match.params.id).then(res=>{
+                console.log("res",res);
+                form.setFieldsValue({name:res.product.name,price:res.product.price});
+            })
+        }
+    },[]);
+
 
     const onFinish = values => {
         console.log('Success:', values);
         console.log('提交');
+        if(props.match.params.id){
+            modifyOne(props.match.params.id,values).then(res=>{
+                props.history.push("/admin/products");
+            }).catch(err=>{
+                console.log(err);
+            });
+        }else{
+            createApi(values).then(res=>{
+                props.history.push("/admin/products");
+            }).catch(err=>{
+                console.log(err);
+            });
+        }
 
-        createApi({values}).then(res=>{
-            props.history.push("/admin/products");
-        }).catch(err=>{
-            console.log(err);
-        });
     };
 
     const onFinishFailed = errorInfo => {
@@ -35,9 +56,9 @@ function Edit(props){
             <Button onClick={()=>props.history.push("/admin/products")}>返回</Button>
         }>
             <Form
+                form={form}
                 {...layout}
                 name="basic"
-                initialValues={{ }}
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
             >

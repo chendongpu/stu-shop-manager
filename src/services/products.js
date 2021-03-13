@@ -8,10 +8,14 @@ export function createApi(data){
     return post("/test/create",data);
 }
 
+export function oneApi(id){
+    return get(`/test/one/${id}`);
+}
+
 export function  modifyOne(id,data){
-    return post("/test/update/`${id}`",data);
+    return post(`/test/update/${id}`,data);
 }
 
 export function  delOne(id,data){
-    return post("test/delete/`${id}`",data);
+    return post(`/test/delete/${id}`,data);
 }
