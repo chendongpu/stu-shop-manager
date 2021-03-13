@@ -16,6 +16,6 @@ export function  modifyOne(id,data){
     return post(`/test/update/${id}`,data);
 }
 
-export function  delOne(id,data){
-    return post(`/test/delete/${id}`,data);
+export function  delOne(id){
+    return post(`/test/delete/${id}`);
 }

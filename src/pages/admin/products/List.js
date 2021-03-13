@@ -1,6 +1,6 @@
 import  {React,useEffect,useState} from 'react'
 import {Card,Table,Button,Popconfirm} from 'antd'
-import {listApi} from "../../../services/products";
+import {listApi,delOne} from "../../../services/products";
 
 function List(props){
 
@@ -52,7 +52,12 @@ function List(props){
                     <Button type="primary" size="small" onClick={()=>{
                         props.history.push(`/admin/products/edit/${record.id}`)
                     }}>修改</Button>
-                    <Popconfirm title="确定要删除此项么?" onCancel={()=>{console.log("用户取消删除")}} onConfirm={()=>{console.log("用户确认删除")}}>
+                    <Popconfirm title="确定要删除此项么?" onCancel={()=>{console.log("用户取消删除")}} onConfirm={()=>{
+                        delOne(record.id).then(res=>{
+                            loadData(1);
+                        });
+                        console.log("用户确认删除")
+                    }}>
                     <Button type="danger" style={{margin:"0 1rem"}} size="small">删除</Button>
                     </Popconfirm>
                 </div>
