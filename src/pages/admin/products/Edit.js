@@ -1,5 +1,7 @@
 import  React from 'react'
 import {Form,Card,Input,Button,message} from "antd"
+import {createApi} from "../../../services/products";
+
 const layout = {
     labelCol: { span: 8 },
     wrapperCol: { span: 16 },
@@ -13,6 +15,12 @@ function Edit(props){
     const onFinish = values => {
         console.log('Success:', values);
         console.log('提交');
+
+        createApi({values}).then(res=>{
+            props.history.push("/admin/products");
+        }).catch(err=>{
+            console.log(err);
+        });
     };
 
     const onFinishFailed = errorInfo => {
@@ -23,7 +31,9 @@ function Edit(props){
 
 
     return (
-        <Card title="商品编辑">
+        <Card title="商品编辑" extra={
+            <Button onClick={()=>props.history.push("/admin/products")}>返回</Button>
+        }>
             <Form
                 {...layout}
                 name="basic"
