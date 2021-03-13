@@ -1,20 +1,36 @@
-import  React from 'react'
+import  {React,useEffect,useState} from 'react'
 import {Card,Table,Button,Popconfirm} from 'antd'
 import {listApi} from "../../../services/products";
 
 function List(props){
 
-    // useEffect(()=>{
-    //     listApi().then(res=>{
-    //         console.log(res);
-    //     });
-    // },[]);
+    const [dataSource,setDataSource]=useState([]);
+    const [total,setTotal]=useState(0);
 
-    const dataSource=[
-        {id:1,name:'apple',price:5},
-        {id:2,name:'banana',price:4},
-        {id:3,name:'peach',price:3}
-    ];
+    useEffect(()=>{
+        listApi().then(res=>{
+            console.log(res);
+            setDataSource(res.products);
+            console.log("total",res.total);
+            setTotal(res.total);
+        });
+    },[]);
+
+    const loadData=(page)=>{
+        console.log(page);
+        listApi(page).then(res=>{
+            console.log(res);
+            setDataSource(res.products);
+            console.log("total",res.total);
+            setTotal(res.total);
+        });
+    }
+
+    // const dataSource=[
+    //     {id:1,name:'apple',price:5},
+    //     {id:2,name:'banana',price:4},
+    //     {id:3,name:'peach',price:3}
+    // ];
 
     const columns=[{
         title:'序号',
@@ -51,7 +67,7 @@ function List(props){
         }
         >
 
-            <Table columns={columns} bordered dataSource={dataSource}/>
+            <Table rowKey="id" pagination={{total,defaultPageSize:3,onChange:loadData}} columns={columns} bordered dataSource={dataSource}/>
         </Card>
     )
 
