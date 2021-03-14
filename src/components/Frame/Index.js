@@ -7,6 +7,7 @@ import {adminRoutes} from '../../routes/index';
 import {clearToken} from '../../utils/auth'
 import logo from './logo.svg';
 import "./frame.css"
+import {connect} from 'react-redux';
 
 const { Header, Content, Sider } = Layout;
 
@@ -49,7 +50,7 @@ function Index(props){
                     <Dropdown overlay={popMenu}>
                         <div>
                             <Avatar>U</Avatar>
-                            <Badge dot><span style={{color:'#fff'}}>超级管理员<DownOutlined /></span></Badge>
+                            <Badge dot={!props.isAllRead}><span style={{color:'#fff'}}>超级管理员<DownOutlined /></span></Badge>
                         </div>
 
                     </Dropdown>
@@ -86,4 +87,4 @@ function Index(props){
     );
 }
 
-export default withRouter(Index);
+export default connect(state=>state)(withRouter(Index));

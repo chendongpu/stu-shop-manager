@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {Provider} from 'react-redux';
+import store from "./store";
 import {HashRouter as Router,Switch,Route,Redirect} from 'react-router-dom'
 import './index.css';
 import reportWebVitals from './reportWebVitals';
@@ -7,7 +9,9 @@ import {mainRoutes} from './routes/index'
 import  App from "./App";
 import 'antd/dist/antd.css';
 
-ReactDOM.render(<Router>
+ReactDOM.render(
+    <Provider store={store}>
+    <Router>
         <Switch>
             <Route path="/admin" render={routeProps=><App {...routeProps} />} />
             {mainRoutes.map(route=>{
@@ -18,7 +22,8 @@ ReactDOM.render(<Router>
 
         </Switch>
 
-    </Router>,
+    </Router>
+    </Provider>,
   document.getElementById('root')
 );
 

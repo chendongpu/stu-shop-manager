@@ -1,7 +1,8 @@
 import React from 'react';
-import {Card,List, Typography,Button, Divider} from 'antd'
+import {Card,List, Typography,Button, Divider} from 'antd';
+import {connect} from 'react-redux';
 
-function Index(){
+function Index(props){
     const data = [
         'Racing car sprays burning fuel into crowd.',
         'Japanese princess to wed commoner.',
@@ -10,7 +11,7 @@ function Index(){
         'Los Angeles battles huge wildfires.',
     ];
     return (
-        <Card title="通知中心" extra={<Button>全部标为已读</Button>} style={{ width: '100%' }}>
+        <Card title="通知中心" extra={<Button onClick={()=>props.dispatch({type:'READ_ALL'})}>全部标为已读</Button>} style={{ width: '100%' }}>
             <List
                 header={<div>Header</div>}
                 footer={<div>Footer</div>}
@@ -27,4 +28,4 @@ function Index(){
     );
 }
 
-export default Index;
+export default connect(state=>state)(Index);
