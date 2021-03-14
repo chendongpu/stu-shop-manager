@@ -1,5 +1,5 @@
 import  {React,useEffect,useState} from 'react'
-import {Card,Table,Button,Popconfirm} from 'antd'
+import {Card, Table, Button, Popconfirm, Upload} from 'antd'
 import {listApi, delOne, modifyOne} from "../../../services/products";
 import "./List.css"
 
@@ -51,6 +51,10 @@ function List(props){
         title:'在售',
         dataIndex:'onsale',
         render:(txt,record,index)=>(record.onsale==1)?"在售":"下架"
+    },{
+        title:'图片',
+        dataIndex:'file',
+        render:(txt,record,index)=> record.file ? <img src={record.file } alt="avatar" style={{ width: '100px',height:'100px' }} /> : '暂无图片'
     },{
         title:'操作',
         render:(txt,record,index)=>{

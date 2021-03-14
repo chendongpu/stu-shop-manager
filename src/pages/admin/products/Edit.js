@@ -1,5 +1,6 @@
 import  {React,useEffect,useState} from 'react'
-import {Form,Card,Input,Button,message} from "antd"
+import {Form,Card,Input,Button,Upload,message} from "antd"
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import {createApi,  oneApi,modifyOne} from "../../../services/products";
 
 const layout = {
@@ -12,30 +13,58 @@ const tailLayout = {
 
 
 
+
 function Edit(props){
 
     const [form] = Form.useForm();
+
+    const [loading,setLoading]=useState(false);
+    const [imageUrl,setImageUrl]=useState("");
+
     useEffect(()=>{
         if(props.match.params.id){
             oneApi(props.match.params.id).then(res=>{
                 console.log("res",res);
                 form.setFieldsValue({name:res.product.name,price:res.product.price});
+                setImageUrl(res.product.file);
             })
         }
     },[]);
+
+    const uploadButton = (
+        <div>
+            {loading ? <LoadingOutlined /> : <PlusOutlined />}
+            <div style={{ marginTop: 8 }}>Upload</div>
+        </div>
+    );
+
+    const handleChange = info => {
+        if (info.file.status === 'uploading') {
+            setLoading(true);
+            return;
+        }
+        if (info.file.status === 'done') {
+            // Get this url from response in real world.
+            console.log("info",info.file.response);
+
+            setImageUrl(info.file.response.file_name);
+            setLoading(false);
+
+        }
+    };
 
 
     const onFinish = values => {
         console.log('Success:', values);
         console.log('提交');
         if(props.match.params.id){
-            modifyOne(props.match.params.id,values).then(res=>{
+            modifyOne(props.match.params.id,{...values,file:imageUrl}).then(res=>{
                 props.history.push("/admin/products");
             }).catch(err=>{
                 console.log(err);
             });
         }else{
-            createApi(values).then(res=>{
+            createApi({...values,file:imageUrl}).then(res=>{
                 props.history.push("/admin/products");
             }).catch(err=>{
                 console.log(err);
@@ -87,6 +116,20 @@ function Edit(props){
 
                 >
                     <Input />
+                </Form.Item>
+
+                <Form.Item
+                    label="主图">
+                    <Upload
+                        name="file"
+                        listType="picture-card"
+                        className="avatar-uploader"
+                        showUploadList={false}
+                        action="/api/index.php/test/upload"
+                        onChange={(info)=>handleChange(info)}
+                    >
+                        {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+                    </Upload>
                 </Form.Item>
 
                 <Form.Item {...tailLayout}>
