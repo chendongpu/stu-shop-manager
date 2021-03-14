@@ -1,5 +1,5 @@
 import React from 'react'
-import { Layout, Menu, Dropdown,Avatar,message } from 'antd';
+import { Layout, Menu, Dropdown,Avatar,message ,Badge} from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons';
 import {withRouter} from 'react-router-dom'
@@ -21,11 +21,15 @@ function Index(props){
 
     const popMenu=(
         <Menu onClick={(p)=>{
-            if(p.key == 'logout'){
+            if(p.key === 'logout'){
                 clearToken();
                 props.history.push('/login');
             }else{
-                message.info(p.key);
+                if(p.key === 'noti'){
+
+                    props.history.push('/admin/notice');
+                }
+
             }
         }}>
             <Menu.Item key="noti">通知中心</Menu.Item>
@@ -45,7 +49,7 @@ function Index(props){
                     <Dropdown overlay={popMenu}>
                         <div>
                             <Avatar>U</Avatar>
-                            <span style={{color:'#fff'}}>超级管理员<DownOutlined /></span>
+                            <Badge dot><span style={{color:'#fff'}}>超级管理员<DownOutlined /></span></Badge>
                         </div>
 
                     </Dropdown>

@@ -4,7 +4,7 @@ import Index from "../pages/admin/dashboard/Index";
 import List from "../pages/admin/products/List";
 import Edit from "../pages/admin/products/Edit";
 import PageNotFound from "../pages/PageNotFound";
-
+import Notice from "../pages/admin/notice/Index"
 export const  mainRoutes=[{
     path:"/login",
     component:Login
@@ -31,6 +31,11 @@ export const adminRoutes=[{
     {
         path:"/admin/products/edit/:id?",
         component:Edit,
+        isShow:false
+    },
+    {
+        path:"/admin/notice",
+        component:Notice,
         isShow:false
     }
 ];
