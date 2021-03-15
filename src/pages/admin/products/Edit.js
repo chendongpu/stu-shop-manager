@@ -2,6 +2,10 @@ import  {React,useEffect,useState} from 'react'
 import {Form,Card,Input,Button,Upload,message} from "antd"
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import {createApi,  oneApi,modifyOne} from "../../../services/products";
+// 引入编辑器组件
+import BraftEditor from 'braft-editor'
+// 引入编辑器样式
+import 'braft-editor/dist/index.css'
 
 const layout = {
     labelCol: { span: 8 },
@@ -20,6 +24,7 @@ function Edit(props){
 
     const [loading,setLoading]=useState(false);
     const [imageUrl,setImageUrl]=useState("");
+    const [editorState,setEditorState]=useState( BraftEditor.createEditorState(null));
 
     useEffect(()=>{
         if(props.match.params.id){
@@ -27,6 +32,7 @@ function Edit(props){
                 console.log("res",res);
                 form.setFieldsValue({name:res.product.name,price:res.product.price});
                 setImageUrl(res.product.file);
+                setEditorState(BraftEditor.createEditorState(res.product.content));
             })
         }
     },[]);
@@ -53,18 +59,23 @@ function Edit(props){
         }
     };
 
+    const handleEditorChange = (e) => {
+        setEditorState(e)
+    }
+
 
     const onFinish = values => {
         console.log('Success:', values);
         console.log('提交');
+        console.log("editorState",editorState.toHTML());
         if(props.match.params.id){
-            modifyOne(props.match.params.id,{...values,file:imageUrl}).then(res=>{
+            modifyOne(props.match.params.id,{...values,file:imageUrl,content:editorState.toHTML()}).then(res=>{
                 props.history.push("/admin/products");
             }).catch(err=>{
                 console.log(err);
             });
         }else{
-            createApi({...values,file:imageUrl}).then(res=>{
+            createApi({...values,file:imageUrl,content:editorState.toHTML()}).then(res=>{
                 props.history.push("/admin/products");
             }).catch(err=>{
                 console.log(err);
@@ -130,6 +141,15 @@ function Edit(props){
                     >
                         {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
                     </Upload>
+                </Form.Item>
+
+
+                <Form.Item
+                    label="content">
+                    <BraftEditor
+                        value={editorState}
+                        onChange={(e)=>handleEditorChange(e)}
+                    />
                 </Form.Item>
 
                 <Form.Item {...tailLayout}>
