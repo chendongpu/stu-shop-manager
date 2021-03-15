@@ -1,3 +1,92 @@
+# php接口代码
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Test extends CI_Controller {
+
+    public function index()
+    {
+        $page=$this->input->post('page',1);
+        $limit=$this->input->post('limit',3);
+        $products= $this->db->select('*')->from('a')->limit($limit,($page-1)*$limit)->order_by('id','desc')->get()->result_array();
+
+        $num_arr = $this->db->select('count(*) as num')->from('a')->get()->row_array();
+        $num=$num_arr["num"];
+
+        json_output(200,array('products' => $products,"total"=>$num));
+
+    }
+
+    public function create()
+    {
+        $values= json_decode(file_get_contents('php://input'), TRUE);
+        $this->db->insert('a',array("name"=>$values["name"],"price"=>$values["price"]));
+        return array('status' => 201,'message' => 'Data has been created.');
+    }
+
+    public function one($id){
+        $product = $this->db->from('a')->where("id",$id)->get()->row_array();
+        json_output(200,array('product' => $product));
+    }
+
+    public function update($id)
+    {
+        $values= json_decode(file_get_contents('php://input'), TRUE);
+        $this->db->where('id',$id)->update('a',$values);
+        return array('status' => 201,'message' => 'Data has been update.');
+    }
+
+    public function delete($id){
+        $this->db->where('id',$id)->delete('a');
+        return array('status' => 200,'message' => 'Data has been deleted.');
+    }
+
+
+    //上传图片
+    public function upload(){
+        $path="../upload/file";
+        //手动创建文件上传目录
+        if (!is_dir($path)) {
+            mkdir($path, 0777, true);
+        }
+
+        $config['upload_path'] =$path;//根目录下的uploads文件(即相对于入口文件)
+        $config['allowed_types'] = 'gif|jpg|png';
+        $config['max_size'] = '2048';//允许上传文件大小的最大值（以K为单位）。该参数为0则不限制。
+        $config['max_width']  = '1024';
+        $config['max_height']  = '768';
+        $config['file_name']  = time();
+        $this->load->library('upload', $config);
+        $result = $this->upload->do_upload('file');
+
+        if(!$result){
+            $error = array('error' => $this->upload->display_errors());
+            $error = strip_tags($error["error"]);
+            json_output(201,array('status' => 201,'error' => $error));
+
+        }else{
+            $upload_data=$this->upload->data();
+            $file_name=$upload_data["file_name"];
+            json_output(200,array('status' => 200,'file_name' => "/upload/file/".$file_name));
+        }
+    }
+}
+
+
+# 数据库结构
+
+CREATE TABLE `a` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL DEFAULT '',
+  `price` decimal(11,2) NOT NULL DEFAULT '0.00',
+  `onsale` tinyint(1) NOT NULL DEFAULT '1',
+  `file` varchar(128) NOT NULL DEFAULT '',
+  `content` text,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
