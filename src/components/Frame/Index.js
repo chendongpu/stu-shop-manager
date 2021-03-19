@@ -87,4 +87,4 @@ function Index(props){
     );
 }
 
-export default connect(state=>state)(withRouter(Index));
+export default connect(state=>state.notice)(withRouter(Index));

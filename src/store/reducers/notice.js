@@ -1,5 +1,5 @@
-import {createStore} from 'redux'
-const notice=(state={isAllRead:false,count:8},action)=>{
+
+export default (state={isAllRead:false,count:8},action)=>{
     switch ( action.type) {
         case "READ_ALL":
             return {...state,isAllRead:true};
@@ -8,5 +8,3 @@ const notice=(state={isAllRead:false,count:8},action)=>{
 
     }
 }
-const  store=createStore(notice);
-export default store;
