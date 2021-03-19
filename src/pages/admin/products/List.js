@@ -1,15 +1,20 @@
 import  {React,useEffect,useState} from 'react'
-import {Card, Table, Button, Popconfirm, Upload} from 'antd'
+import {Card, Table, Button, Popconfirm, Upload} from 'antd';
+import {connect} from 'react-redux';
 import {listApi, delOne, modifyOne} from "../../../services/products";
 import "./List.css"
+import loadProduct from "../../../store/actions/product";
 
 function List(props){
-
+    console.log("====props===",props);
     const [dataSource,setDataSource]=useState([]);
     const [total,setTotal]=useState(0);
     const [currentPage,setCurrentPage]=useState(1);
 
     useEffect(()=>{
+        props.dispatch(loadProduct({
+            page:2
+        }));
         listApi().then(res=>{
             console.log(res);
             setDataSource(res.products);
@@ -97,4 +102,4 @@ function List(props){
     )
 
 }
-export default List
+export default connect(state=>state)(List);
