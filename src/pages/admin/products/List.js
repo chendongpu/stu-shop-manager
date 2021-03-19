@@ -7,38 +7,22 @@ import loadProduct from "../../../store/actions/product";
 
 function List(props){
     console.log("====props===",props);
-    const [dataSource,setDataSource]=useState([]);
-    const [total,setTotal]=useState(0);
-    const [currentPage,setCurrentPage]=useState(1);
+
+    const {list,page,total}=props;
 
     useEffect(()=>{
+        console.log("====zzzzzzzzz===",props);
         props.dispatch(loadProduct({
-            page:2
+            page:1
         }));
-        listApi().then(res=>{
-            console.log(res);
-            setDataSource(res.products);
-            console.log("total",res.total);
-            setTotal(res.total);
-        });
     },[]);
 
-    const loadData=(page)=>{
-        console.log(page);
-        setCurrentPage(page);
-        listApi(page).then(res=>{
-            console.log(res);
-            setDataSource(res.products);
-            console.log("total",res.total);
-            setTotal(res.total);
-        });
+    const loadData=()=>{
+        props.dispatch(loadProduct({
+            page
+        }));
     }
 
-    // const dataSource=[
-    //     {id:1,name:'apple',price:5},
-    //     {id:2,name:'banana',price:4},
-    //     {id:3,name:'peach',price:3}
-    // ];
 
     const columns=[{
         title:'序号',
@@ -70,7 +54,7 @@ function List(props){
                     }}>修改</Button>
                     <Popconfirm title="确定要删除此项么?" onCancel={()=>{console.log("用户取消删除")}} onConfirm={()=>{
                         delOne(record.id).then(res=>{
-                            loadData(currentPage);
+                            loadData();
                         });
                         console.log("用户确认删除")
                     }}>
@@ -78,7 +62,7 @@ function List(props){
                     </Popconfirm>
                     <Button type="primary" size="small" onClick={()=>{
                         modifyOne(record.id,{onsale:(record.onsale==1?0:1)}).then(res=>{
-                            loadData(currentPage);
+                            loadData();
                         }).catch(err=>{
                             console.log(err);
                         });
@@ -97,9 +81,14 @@ function List(props){
         }
         >
 
-            <Table  rowClassName={record =>(record.onsale==1)?"":"bg-red"} rowKey="id" pagination={{total,defaultPageSize:3,onChange:loadData}} columns={columns} bordered dataSource={dataSource}/>
+            <Table  rowClassName={record =>(record.onsale==1)?"":"bg-red"} rowKey="id" pagination={
+                {total,defaultPageSize:3,
+                    onChange:p=>{
+                    props.dispatch(loadProduct({page:p}))
+                }}
+            } columns={columns} bordered dataSource={list}/>
         </Card>
     )
 
 }
-export default connect(state=>state)(List);
+export default connect(state=>state.product)(List);
